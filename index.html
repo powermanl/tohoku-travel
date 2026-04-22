@@ -1,0 +1,1180 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="format-detection" content="telephone=no">
+<meta name="theme-color" content="#1a1612">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<style>
+/* iOS Safari fixes */
+body{overscroll-behavior-y: contain;}
+.nav-wrap{-webkit-overflow-scrolling: touch;}
+.day-panel{padding-bottom: calc(80px + env(safe-area-inset-bottom));}
+.back-top{bottom: calc(20px + env(safe-area-inset-bottom));}
+.drawer{padding-bottom: calc(30px + env(safe-area-inset-bottom));}
+/* Improve tap responsiveness */
+.tl-card, .tab-btn, .map-btn, .back-top{touch-action: manipulation;}
+</style>
+
+<meta charset="UTF-8">
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&family=Noto+Sans+JP:wght@400;500;700&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0;}
+
+:root{
+  --ink:#1a1612;
+  --ink2:#4a3f35;
+  --ink3:#8a7a6e;
+  --cream:#faf7f2;
+  --cream2:#f0ebe2;
+  --red:#c0392b;
+  --red2:#e8604c;
+  --gold:#b8860b;
+  --gold2:#e8c547;
+  --green:#2e6b4f;
+  --green2:#4a9e73;
+  --blue:#1a4f7a;
+  --border:#d4c9bb;
+}
+
+body{
+  font-family:'Noto Sans JP',sans-serif;
+  background:var(--cream);
+  color:var(--ink);
+  min-height:100vh;
+  font-size:14px;
+  line-height:1.6;
+}
+
+/* ===== HEADER ===== */
+.header{
+  background:linear-gradient(135deg,#1a1612 0%,#2d2318 40%,#1a1612 100%);
+  color:#fff;
+  padding:20px 16px 16px;
+  position:relative;
+  overflow:hidden;
+}
+.header::before{
+  content:'';
+  position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='1' fill='%23b8860b' opacity='0.3'/%3E%3C/svg%3E") repeat;
+  opacity:.4;
+}
+.header-inner{position:relative;z-index:1;}
+.header-sub{font-size:10px;letter-spacing:3px;color:var(--gold2);text-transform:uppercase;margin-bottom:4px;}
+.header-title{font-family:'Noto Serif JP',serif;font-size:22px;font-weight:700;line-height:1.3;color:#fff;}
+.header-meta{display:flex;gap:12px;margin-top:10px;flex-wrap:wrap;}
+.header-badge{background:rgba(184,134,11,.2);border:1px solid rgba(184,134,11,.4);border-radius:20px;padding:3px 10px;font-size:11px;color:var(--gold2);}
+
+/* ===== NAV TABS ===== */
+.nav-wrap{background:#2d2318;position:sticky;top:0;z-index:100;overflow-x:auto;scrollbar-width:none;}
+.nav-wrap::-webkit-scrollbar{display:none;}
+.nav-tabs{display:flex;gap:0;min-width:max-content;}
+.tab-btn{
+  padding:10px 14px;font-size:12px;font-weight:500;color:#a89880;
+  background:transparent;border:none;cursor:pointer;white-space:nowrap;
+  border-bottom:2px solid transparent;transition:all .2s;font-family:'Noto Sans JP',sans-serif;
+}
+.tab-btn.active{color:var(--gold2);border-bottom-color:var(--gold2);}
+.tab-btn:hover{color:#fff;}
+
+/* ===== DAY PANEL ===== */
+.day-panel{display:none;padding:12px 12px 80px;animation:fadeIn .3s ease;}
+.day-panel.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ===== DAY HEADER ===== */
+.day-header{
+  background:linear-gradient(135deg,var(--green),var(--green2));
+  border-radius:12px;padding:14px 16px;margin-bottom:14px;color:#fff;
+}
+.day-header.d2{background:linear-gradient(135deg,var(--blue),#2871a0);}
+.day-header.d3{background:linear-gradient(135deg,#7a3a1a,#b05020);}
+.day-header.d4{background:linear-gradient(135deg,#1a3a5c,#2a5a8c);}
+.day-header.d5{background:linear-gradient(135deg,#5c2a1a,#8a4030);}
+.day-header.d6{background:linear-gradient(135deg,#4a2a00,#7a5010);}
+.day-header.d7{background:linear-gradient(135deg,#1a4a2a,#2a7040);}
+
+.day-num{font-size:10px;letter-spacing:2px;opacity:.8;margin-bottom:2px;}
+.day-title{font-family:'Noto Serif JP',serif;font-size:16px;font-weight:700;line-height:1.4;}
+.day-route{font-size:11px;opacity:.85;margin-top:4px;}
+
+/* ===== SECTION ===== */
+.section{margin-bottom:12px;}
+.section-label{
+  font-size:10px;font-weight:700;letter-spacing:2px;
+  color:var(--ink3);padding:0 0 6px;
+  border-bottom:1px solid var(--border);margin-bottom:10px;
+  text-transform:uppercase;
+}
+
+/* ===== TIMELINE CARD ===== */
+.timeline{position:relative;padding-left:40px;}
+.timeline::before{content:'';position:absolute;left:14px;top:8px;bottom:8px;width:1px;background:var(--border);}
+.tl-item{position:relative;margin-bottom:10px;}
+.tl-dot{
+  position:absolute;left:-32px;top:10px;
+  width:12px;height:12px;border-radius:50%;
+  background:var(--cream);border:2px solid var(--border);
+  transition:border-color .2s;
+}
+.tl-item.hotel .tl-dot{background:var(--gold);border-color:var(--gold);}
+.tl-item.spot .tl-dot{background:var(--red);border-color:var(--red);}
+.tl-item.move .tl-dot{background:var(--cream2);border-color:var(--ink3);}
+.tl-item.refuel .tl-dot{background:var(--green);border-color:var(--green);}
+
+.tl-card{
+  background:#fff;border:1px solid var(--border);border-radius:10px;
+  padding:10px 12px;cursor:pointer;transition:box-shadow .2s,transform .15s;
+}
+.tl-card:active{transform:scale(.98);box-shadow:none;}
+.tl-card:hover{box-shadow:0 2px 8px rgba(0,0,0,.08);}
+
+.tl-time{font-size:11px;color:var(--ink3);margin-bottom:2px;}
+.tl-name{font-size:13px;font-weight:700;color:var(--ink);line-height:1.4;}
+.tl-desc{font-size:11px;color:var(--ink2);margin-top:3px;line-height:1.6;}
+
+.tl-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;}
+.tag{font-size:10px;padding:2px 7px;border-radius:20px;font-weight:500;}
+.tag-park{background:#e8f4ee;color:#1d6a3a;}
+.tag-park-paid{background:#fff3e0;color:#e65100;}
+.tag-fuel{background:#e3f2fd;color:#0d47a1;}
+.tag-warn{background:#fce4ec;color:#b71c1c;}
+.tag-note{background:var(--cream2);color:var(--ink3);}
+.tag-yen{background:#f3e5f5;color:#6a1b9a;}
+
+/* ===== INFO CARD ===== */
+.info-card{
+  background:#fff;border:1px solid var(--border);border-radius:10px;
+  padding:12px 14px;margin-bottom:8px;
+}
+.info-card-title{font-size:12px;font-weight:700;color:var(--ink);margin-bottom:4px;display:flex;align-items:center;gap:6px;}
+.info-card-body{font-size:11px;color:var(--ink2);line-height:1.7;}
+.info-addr{display:flex;align-items:flex-start;gap:6px;margin-top:6px;font-size:11px;color:var(--blue);}
+.map-btn{
+  display:inline-flex;align-items:center;gap:4px;
+  background:var(--blue);color:#fff;border:none;border-radius:6px;
+  padding:5px 10px;font-size:11px;font-weight:500;cursor:pointer;
+  margin-top:8px;font-family:'Noto Sans JP',sans-serif;
+  text-decoration:none;
+}
+.map-btn:hover{opacity:.85;}
+.map-btn-red{background:var(--red);}
+.map-btn-green{background:var(--green);}
+
+/* ===== FUEL SECTION ===== */
+.fuel-card{
+  background:linear-gradient(135deg,#f0f8ff,#e8f4fd);
+  border:1px solid #bee0f7;border-radius:10px;padding:12px 14px;margin-bottom:8px;
+}
+.fuel-header{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.fuel-icon{font-size:18px;}
+.fuel-title{font-size:13px;font-weight:700;color:var(--blue);}
+.fuel-meta{font-size:10px;color:#1565c0;margin-top:1px;}
+.fuel-row{display:flex;align-items:flex-start;gap:8px;padding:8px 0;border-top:1px solid rgba(0,0,0,.07);}
+.fuel-badge{
+  background:var(--blue);color:#fff;border-radius:4px;
+  padding:2px 6px;font-size:10px;font-weight:700;white-space:nowrap;flex-shrink:0;
+}
+.fuel-badge.rec{background:var(--green);}
+.fuel-badge.must{background:var(--red);}
+.fuel-body{flex:1;}
+.fuel-name{font-size:12px;font-weight:700;color:var(--ink);}
+.fuel-addr-text{font-size:10px;color:var(--ink2);margin-top:2px;}
+.fuel-price{font-size:12px;font-weight:700;color:var(--red);margin-top:2px;}
+
+/* ===== OVERVIEW BAR ===== */
+.overview-bar{
+  background:#fff;border:1px solid var(--border);border-radius:10px;
+  padding:10px 14px;margin-bottom:14px;
+}
+.ov-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.ov-item{text-align:center;}
+.ov-val{font-size:16px;font-weight:700;color:var(--ink);}
+.ov-label{font-size:10px;color:var(--ink3);margin-top:1px;}
+
+/* ===== HOTEL CARD ===== */
+.hotel-card{
+  background:linear-gradient(135deg,#fffbf0,#fef3c7);
+  border:1px solid #f0d060;border-radius:10px;padding:12px 14px;margin-bottom:8px;
+}
+.hotel-title{font-size:13px;font-weight:700;color:#5c3a00;}
+.hotel-price{font-size:15px;font-weight:700;color:var(--red);margin-top:2px;}
+.hotel-note{font-size:10px;color:#7a5a00;margin-top:4px;}
+
+/* ===== SUMMARY PAGE ===== */
+.summary-grid{display:grid;gap:10px;}
+.sum-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px;}
+.sum-day{font-size:11px;font-weight:700;color:var(--ink3);letter-spacing:1px;margin-bottom:4px;}
+.sum-route{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:8px;}
+.sum-spots{display:flex;flex-wrap:wrap;gap:4px;}
+.sum-spot{font-size:10px;background:var(--cream2);color:var(--ink2);padding:2px 7px;border-radius:20px;}
+
+/* ===== FUEL SUMMARY ===== */
+.fuel-sum{
+  background:linear-gradient(135deg,#1a3a5c,#1a4f7a);
+  border-radius:12px;padding:14px;color:#fff;margin-bottom:12px;
+}
+.fuel-sum-title{font-size:12px;letter-spacing:2px;opacity:.7;margin-bottom:10px;}
+.fuel-sum-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.fuel-sum-item{background:rgba(255,255,255,.1);border-radius:8px;padding:8px 10px;}
+.fuel-sum-n{font-size:18px;font-weight:700;color:var(--gold2);}
+.fuel-sum-l{font-size:10px;opacity:.75;margin-top:1px;}
+
+.full-tank-row{display:flex;align-items:center;gap:8px;padding:8px 10px;border-top:1px solid rgba(255,255,255,.15);margin-top:8px;}
+.ft-num{
+  width:24px;height:24px;border-radius:50%;
+  background:var(--gold2);color:var(--ink);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;flex-shrink:0;
+}
+.ft-text{font-size:11px;opacity:.9;}
+
+/* ===== SCROLL TOP ===== */
+.back-top{
+  position:fixed;bottom:20px;right:16px;
+  background:var(--ink);color:#fff;border:none;border-radius:50%;
+  width:40px;height:40px;font-size:16px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 8px rgba(0,0,0,.3);z-index:200;
+  opacity:0;transition:opacity .3s;
+}
+.back-top.visible{opacity:1;}
+
+/* ===== DETAIL DRAWER ===== */
+.drawer-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;
+  display:none;align-items:flex-end;
+}
+.drawer-overlay.open{display:flex;}
+.drawer{
+  background:var(--cream);width:100%;border-radius:16px 16px 0 0;
+  padding:0 0 30px;max-height:80vh;overflow-y:auto;
+  transform:translateY(100%);transition:transform .3s ease;
+}
+.drawer-overlay.open .drawer{transform:translateY(0);}
+.drawer-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:10px auto 14px;}
+.drawer-body{padding:0 16px;}
+.drawer-title{font-family:'Noto Serif JP',serif;font-size:17px;font-weight:700;margin-bottom:6px;}
+.drawer-sub{font-size:12px;color:var(--ink3);margin-bottom:12px;}
+.drawer-section{margin-bottom:12px;}
+.drawer-section-title{font-size:11px;font-weight:700;color:var(--ink3);letter-spacing:1px;margin-bottom:6px;border-bottom:1px solid var(--border);padding-bottom:4px;}
+.drawer-text{font-size:12px;color:var(--ink2);line-height:1.7;}
+.close-btn{
+  position:absolute;top:14px;right:16px;background:var(--cream2);
+  border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;
+  font-size:14px;display:flex;align-items:center;justify-content:center;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-sub">Family Travel Guide 2026</div>
+    <div class="header-title">東北6県を巡る旅<br><span style="font-size:15px;opacity:.8;">4/29〜5/5 GW 7日間</span></div>
+    <div class="header-meta">
+      <span class="header-badge">🚗 MAZDA CX-60 3.3D AWD</span>
+      <span class="header-badge">👨‍👩‍👧 家族3人</span>
+      <span class="header-badge">総走行 約2,130km</span>
+    </div>
+  </div>
+</div>
+
+<div class="nav-wrap">
+  <div class="nav-tabs" id="navTabs">
+    <button class="tab-btn active" data-day="summary">概要</button>
+    <button class="tab-btn" data-day="d1">4/29 Day1</button>
+    <button class="tab-btn" data-day="d2">4/30 Day2</button>
+    <button class="tab-btn" data-day="d3">5/1 Day3</button>
+    <button class="tab-btn" data-day="d4">5/2 Day4</button>
+    <button class="tab-btn" data-day="d5">5/3 Day5</button>
+    <button class="tab-btn" data-day="d6">5/4 Day6</button>
+    <button class="tab-btn" data-day="d7">5/5 Day7</button>
+  </div>
+</div>
+
+<!-- ===== SUMMARY ===== -->
+<div class="day-panel active" id="panel-summary">
+  <div class="fuel-sum" style="margin-top:12px;">
+    <div class="fuel-sum-title">⛽ 給油計画サマリー</div>
+    <div class="fuel-sum-grid">
+      <div class="fuel-sum-item"><div class="fuel-sum-n">4回</div><div class="fuel-sum-l">満タン給油</div></div>
+      <div class="fuel-sum-item"><div class="fuel-sum-n">58L</div><div class="fuel-sum-l">タンク容量（軽油）</div></div>
+      <div class="fuel-sum-item"><div class="fuel-sum-n">18km/L</div><div class="fuel-sum-l">実燃費目安</div></div>
+      <div class="fuel-sum-item"><div class="fuel-sum-n">~472L</div><div class="fuel-sum-l">総消費量目安</div></div>
+    </div>
+    <div class="full-tank-row"><div class="ft-num">1</div><div class="ft-text"><b>4/29出発前</b>｜東京都内（apollostation 八王子堀之内SS 135円/L）</div></div>
+    <div class="full-tank-row"><div class="ft-num">2</div><div class="ft-text"><b>5/1出発前</b>｜花巻市内（apollostation 花巻南インターSS）</div></div>
+    <div class="full-tank-row"><div class="ft-num">3</div><div class="ft-text"><b>5/3出発前</b>｜青森市内（apollostation セルフ青葉SS）</div></div>
+    <div class="full-tank-row"><div class="ft-num">4</div><div class="ft-text"><b>5/5出発前</b>｜山形市内（apollostation セルフ寿町SS 151円/L）</div></div>
+  </div>
+
+  <div class="summary-grid">
+    <div class="sum-card">
+      <div class="sum-day">DAY 1 — 4/29（火）</div>
+      <div class="sum-route">東京 → 福島県（大内宿・会津若松・裏磐梯）</div>
+      <div class="sum-spots">
+        <span class="sum-spot">大内宿</span><span class="sum-spot">鶴ヶ城</span><span class="sum-spot">さざえ堂</span><span class="sum-spot">五色沼</span>
+        <span class="sum-spot" style="background:#e8f4ee;color:#1d6a3a;">🅿 無料P中心</span>
+        <span class="sum-spot" style="background:#e3f2fd;color:#0d47a1;">⛽ 東京出発前</span>
+      </div>
+      <div style="font-size:11px;color:#b71c1c;margin-top:6px;">🏨 裏磐梯レイクリゾート ¥51,800</div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-day">DAY 2 — 4/30（水）</div>
+      <div class="sum-route">裏磐梯 → 岩手県（厳美渓・平泉・花巻）</div>
+      <div class="sum-spots">
+        <span class="sum-spot">厳美渓</span><span class="sum-spot">達谷窟</span><span class="sum-spot">毛越寺</span><span class="sum-spot">中尊寺金色堂</span>
+        <span class="sum-spot" style="background:#e3f2fd;color:#0d47a1;">⛽ 前沢SA補充（任意）</span>
+      </div>
+      <div style="font-size:11px;color:#b71c1c;margin-top:6px;">🏨 山の神温泉 優香苑 ¥54,000</div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-day">DAY 3 — 5/1（金）</div>
+      <div class="sum-route">花巻 → 八幡平 → 十和田湖 → ホテル十和田荘</div>
+      <div class="sum-spots">
+        <span class="sum-spot">福田パン</span><span class="sum-spot">八幡平雪の回廊</span><span class="sum-spot">発荷峠展望台</span><span class="sum-spot">十和田湖</span>
+        <span class="sum-spot" style="background:#fce4ec;color:#b71c1c;">⚠️ 山岳路GS無し</span>
+        <span class="sum-spot" style="background:#e3f2fd;color:#0d47a1;">⛽ 花巻出発前★必須</span>
+      </div>
+      <div style="font-size:11px;color:#b71c1c;margin-top:6px;">🏨 ホテル十和田荘 ¥40,740</div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-day">DAY 4 — 5/2（土）</div>
+      <div class="sum-route">ホテル十和田荘 → 奥入瀬渓流 → 八甲田 → 青森市</div>
+      <div class="sum-spots">
+        <span class="sum-spot">奥入瀬渓流</span><span class="sum-spot">八甲田ロープウェー</span><span class="sum-spot">青森県立美術館</span><span class="sum-spot">A-FACTORY</span>
+        <span class="sum-spot" style="background:#e8f4ee;color:#1d6a3a;">🅿 無料P多め</span>
+      </div>
+      <div style="font-size:11px;color:#b71c1c;margin-top:6px;">🏨 アートホテル青森 ¥67,200</div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-day">DAY 5 — 5/3（日）</div>
+      <div class="sum-route">青森 → 鶴の舞橋 → 高山稲荷 → 白神山地 → 男鹿</div>
+      <div class="sum-spots">
+        <span class="sum-spot">鶴の舞橋</span><span class="sum-spot">高山稲荷神社</span><span class="sum-spot">十二湖 青池</span>
+        <span class="sum-spot" style="background:#fce4ec;color:#b71c1c;">⚠️ GS過疎区間あり</span>
+        <span class="sum-spot" style="background:#e3f2fd;color:#0d47a1;">⛽ 青森出発前★必須</span>
+      </div>
+      <div style="font-size:11px;color:#b71c1c;margin-top:6px;">🏨 男鹿観光ホテル ¥72,863</div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-day">DAY 6 — 5/4（月）</div>
+      <div class="sum-route">男鹿 → 大潟村 → 角館 → 山寺 → 蔵王温泉</div>
+      <div class="sum-spots">
+        <span class="sum-spot">菜の花ロード</span><span class="sum-spot">角館武家屋敷</span><span class="sum-spot">山寺 立石寺</span>
+        <span class="sum-spot" style="background:#e3f2fd;color:#0d47a1;">⛽ 角館補充（推奨）</span>
+      </div>
+      <div style="font-size:11px;color:#b71c1c;margin-top:6px;">🏨 蔵王温泉 ¥36,506</div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-day">DAY 7 — 5/5（火）</div>
+      <div class="sum-route">蔵王温泉 → 白川湖水没林 → 東京</div>
+      <div class="sum-spots">
+        <span class="sum-spot">蔵王自然植物園</span><span class="sum-spot">いろは沼</span><span class="sum-spot">白川湖水没林</span>
+        <span class="sum-spot" style="background:#fce4ec;color:#b71c1c;">⚠️ GW最終日大渋滞</span>
+        <span class="sum-spot" style="background:#e3f2fd;color:#0d47a1;">⛽ 山形出発前★必須</span>
+      </div>
+      <div style="font-size:11px;color:#555;margin-top:6px;">🏠 東京着 20:00予定</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DAY 1 ===== -->
+<div class="day-panel" id="panel-d1">
+  <div class="day-header d1">
+    <div class="day-num">DAY 1 — 4/29（火）GW初日</div>
+    <div class="day-title">東京 → 福島県<br>大内宿・会津若松・裏磐梯</div>
+    <div class="day-route">走行距離：約370km</div>
+  </div>
+
+  <div class="fuel-card">
+    <div class="fuel-header"><div class="fuel-icon">⛽</div><div><div class="fuel-title">✅ 出発前に満タン給油（1回目）</div><div class="fuel-meta">apollostation 軽油</div></div></div>
+    <div class="fuel-row">
+      <div class="fuel-badge must">最安値</div>
+      <div class="fuel-body">
+        <div class="fuel-name">セルフ＆CCステーション八王子堀之内</div>
+        <div class="fuel-addr-text">📍 東京都八王子市堀之内880-2</div>
+        <div class="fuel-price">軽油 135円/L（現金）</div>
+        <a class="map-btn map-btn-red" href="https://maps.google.com/?q=東京都八王子市堀之内880-2" target="_blank">🗺 マップで開く</a>
+      </div>
+    </div>
+    <div class="fuel-row">
+      <div class="fuel-badge">代替</div>
+      <div class="fuel-body">
+        <div class="fuel-name">セルフ大塚SS（豊島区）</div>
+        <div class="fuel-addr-text">📍 東京都豊島区東池袋4-39-14</div>
+        <div class="fuel-price">軽油 136円/L（現金）</div>
+        <a class="map-btn" href="https://maps.google.com/?q=東京都豊島区東池袋4-39-14" target="_blank">🗺 マップで開く</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">📍 スケジュール＆駐車場</div>
+    <div class="timeline">
+      <div class="tl-item move"><div class="tl-dot"></div>
+        <div class="tl-card">
+          <div class="tl-time">05:00</div>
+          <div class="tl-name">🚗 東京都内を出発</div>
+          <div class="tl-desc">東北道・磐越道経由。GW初日で大渋滞が予想されます。</div>
+        </div>
+      </div>
+      <div class="tl-item spot"><div class="tl-dot"></div>
+        <div class="tl-card" onclick="openDrawer('ouchipark')">
+          <div class="tl-time">09:30〜11:00</div>
+          <div class="tl-name">🏯 大内宿（下郷町）散策 約1.5時間</div>
+          <div class="tl-desc">茅葺き屋根の宿場町。名物ねぎ蕎麦を味わいます。</div>
+          <div class="tl-tags">
+            <span class="tag tag-park">🅿 無料P有</span>
+            <span class="tag tag-warn">⚠️ GW9時頃から混雑</span>
+            <span class="tag tag-note">📍 下郷町大内</span>
+          </div>
+        </div>
+      </div>
+      <div class="tl-item spot"><div class="tl-dot"></div>
+        <div class="tl-card" onclick="openDrawer('tsurupark')">
+          <div class="tl-time">11:50〜13:30</div>
+          <div class="tl-name">🏯 鶴ヶ城 天守閣 約1時間</div>
+          <div class="tl-desc">幕末の舞台。天守閣内博物館・最上階パノラマを堪能。</div>
+          <div class="tl-tags">
+            <span class="tag tag-park">🅿 飯盛山市営無料P</span>
+            <span class="tag tag-note">📍 一箕町八幡244-5</span>
+          </div>
+        </div>
+      </div>
+      <div class="tl-item spot"><div class="tl-dot"></div>
+        <div class="tl-card" onclick="openDrawer('sazaepark')">
+          <div class="tl-time">13:30〜14:30</div>
+          <div class="tl-name">🌀 さざえ堂（飯盛山）</div>
+          <div class="tl-desc">世界唯一の二重螺旋構造。上りと下りが交差しない不思議な堂。</div>
+          <div class="tl-tags">
+            <span class="tag tag-park">🅿 同上・飯盛山市営無料P</span>
+            <span class="tag tag-note">入場料300円</span>
+          </div>
+        </div>
+      </div>
+      <div class="tl-item spot"><div class="tl-dot"></div>
+        <div class="tl-card" onclick="openDrawer('goshikipark')">
+          <div class="tl-time">15:10〜17:10</div>
+          <div class="tl-name">🌊 五色沼（裏磐梯）約2時間</div>
+          <div class="tl-desc">毘沙門沼で絶景散策。五色沼自然探勝路を歩きます。</div>
+          <div class="tl-tags">
+            <span class="tag tag-park">🅿 裏磐梯VC 無料（80台）</span>
+            <span class="tag tag-warn">⚠️ GWは満車注意</span>
+          </div>
+        </div>
+      </div>
+      <div class="tl-item hotel"><div class="tl-dot"></div>
+        <div class="hotel-card">
+          <div class="hotel-title">🏨 裏磐梯レイクリゾート チェックイン 17:10</div>
+          <div class="hotel-price">¥51,800</div>
+          <div class="hotel-note">キャンセル無料：2026/4/21 23:59まで</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DAY 2 ===== -->
+<div class="day-panel" id="panel-d2">
+  <div class="day-header d2">
+    <div class="day-num">DAY 2 — 4/30（水）</div>
+    <div class="day-title">裏磐梯 → 岩手県<br>厳美渓・平泉・花巻</div>
+    <div class="day-route">走行距離：約340km　出発 07:30</div>
+  </div>
+
+  <div class="fuel-card" style="background:linear-gradient(135deg,#f0fff4,#e8f5e9);border-color:#a5d6a7;">
+    <div class="fuel-header"><div class="fuel-icon">⛽</div><div><div class="fuel-title" style="color:#2e7d32;">前沢SA 補充給油（任意）</div><div class="fuel-meta" style="color:#388e3c;">東北道下り・翌日山岳路に備えて</div></div></div>
+    <div class="fuel-row">
+      <div class="fuel-badge rec">推奨</div>
+      <div class="fuel-body">
+        <div class="fuel-name">前沢SA（東北道下り）</div>
+        <div class="fuel-addr-text">📍 岩手県奥州市前沢区（東北道）</div>
+        <div class="fuel-price">残量40%前後での補充</div>
+        <a class="map-btn map-btn-green" href="https://maps.google.com/?q=前沢サービスエリア 東北道下り 岩手" target="_blank">🗺 マップで開く</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">📍 スケジュール＆駐車場</div>
+    <div class="timeline">
+      <div class="tl-item spot"><div class="tl-dot"></div>
+        <div class="tl-card" onclick="openDrawer('genbikeipark')">
+          <div class="tl-time">10:30〜11:45</div>
+          <div class="tl-name">🏞 厳美渓（一関市）約1時間</div>
+          <div class="tl-desc">エメラルドの清流。名物かっこうだんご（9:30〜14:00、売切次第終了）を体験。</div>
+          <div class="tl-tags">
+            <span class="tag tag-park">🅿 市営無料P（北岸）</span>
+            <span class="tag tag-note">📍 一関市厳美町・天工橋北岸</span>
+          </div>
+        </div>
+      </div>
+      <div class="tl-item spot"><div class="tl-dot"></div>
+        <div class="tl-card" onclick="openDrawer('takkokupark')">
+          <div class="tl-time">11:45〜12:45</div>
+          <div class="tl-name">⛩ 達谷窟毘沙門堂 約1時間</div>
+          <div class="tl-desc">1,200年の歴史。岩壁に刻まれた高さ16.5mの岩面大仏を鑑賞。</div>
+          <div class="tl-tags">
+            <span class="tag tag-park">🅿 道路向かい無料P</span>
+            <span class="tag tag-note">入場料500円</span>
+          </div>
+        </div>
+      </div>
+      <div class="tl-item move"><div class="tl-dot"></div>
+        <div class="tl-card"><div class="tl-time">13:00〜14:00</div><div class="tl-name">🍴 平泉周辺でランチ</div></div>
+      </div>
+      <div class="tl-item spot"><div class="tl-dot"></div>
+        <div class="tl-card" onclick="openDrawer('motujipark')">
+          <div class="tl-time">14:00〜15:00</div>
+          <div class="tl-name">🌿 毛越寺 約1時間</div>
+          <div class="tl-desc">平安時代の浄土庭園。広大な池を中心とした静寂の空間。</div>
+          <div class="tl-tags">
+            <span class="tag tag-park-paid">🅿 町営P 普通車300円</span>
+            <span class="tag tag-note">📍 平泉町・毛越寺隣接</span>
+          </div>
+        </div>
+      </div>
+      <div class="tl-item spot"><div class="tl-dot"></div>
+        <div class="tl-card" onclick="openDrawer('chusonjipark')">
+          <div class="tl-time">15:10〜17:00</div>
+          <div class="tl-name">✨ 中尊寺金色堂（世界遺産）</div>
+          <div class="tl-desc">金箔と螺鈿で覆われた平安の宝。参拝締切 16:50 に注意！</div>
+          <div class="tl-tags">
+            <span class="tag tag-park-paid">🅿 第1P 500円・毛越寺割引券付</span>
+            <span class="tag tag-warn">⚠️ 16:50 拝観券締切</span>
+          </div>
+        </div>
+      </div>
+      <div class="tl-item hotel"><div class="tl-dot"></div>
+        <div class="hotel-card">
+          <div class="hotel-title">🏨 山の神温泉 優香苑 チェックイン 18:30</div>
+          <div class="hotel-price">¥54,000（予約済み）</div>
+          <div class="hotel-note">キャンセル無料：4/25まで</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DAY 3 ===== -->
+<div class="day-panel" id="panel-d3">
+  <div class="day-header d3">
+    <div class="day-num">DAY 3 — 5/1（金）</div>
+    <div class="day-title">岩手 → 青森県<br>八幡平・十和田湖・蔦温泉</div>
+    <div class="day-route">走行距離：約310km　出発 08:00</div>
+  </div>
+
+  <div class="fuel-card" style="background:linear-gradient(135deg,#fff3f3,#fce4e4);border-color:#f48fb1;">
+    <div class="fuel-header"><div class="fuel-icon">⛽</div><div><div class="fuel-title" style="color:#c62828;">🔴 出発前 必須満タン給油（2回目）</div><div class="fuel-meta" style="color:#d32f2f;">花巻〜蔦温泉まで約310km GSなし！</div></div></div>
+    <div class="fuel-row">
+      <div class="fuel-badge must">おすすめ</div>
+      <div class="fuel-body">
+        <div class="fuel-name">apollostation 花巻南インターSS</div>
+        <div class="fuel-addr-text">📍 岩手県花巻市中根子字堂前2-2</div>
+        <div class="fuel-price">営業 07:15〜19:15</div>
+        <a class="map-btn map-btn-red" href="https://maps.google.com/?q=岩手県花巻市中根子字堂前2-2" target="_blank">🗺 マップで開く</a>
+      </div>
+    </div>
+    <div class="fuel-row">
+      <div class="fuel-badge">早朝代替</div>
+      <div class="fuel-body">
+        <div class="fuel-name">セルフ花巻空港インター（ENEOS・24時間）</div>
+        <div class="fuel-addr-text">📍 岩手県花巻市西宮野目13-112-1</div>
+        <div class="fuel-price">24時間営業</div>
+        <a class="map-btn" href="https://maps.google.com/?q=岩手県花巻市西宮野目13-112-1" target="_blank">🗺 マップで開く</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">📍 スケジュール＆駐車場</div>
+    <div class="timeline">
+      <div class="tl-item spot"><div class="tl-dot"></div>
+        <div class="tl-card"><div class="tl-time">08:45</div><div class="tl-name">🍞 福田パン 矢巾店（朝食）</div><div class="tl-desc">30種類以上の具材から作るオリジナルサンド。1位：ごぼうサラダ、2位：あんバター。</div><div class="tl-tags"><span class="tag tag-park">🅿 店舗駐車場 無料</span><span class="tag tag-note">📍 紫波郡矢巾町南矢幅10-91-1</span></div></div>
+      </div>
+      <div class="tl-item spot"><div class="tl-dot"></div>
+        <div class="tl-card" onclick="openDrawer('hachimantaipark')">
+          <div class="tl-time">10:30</div>
+          <div class="tl-name">🏔 八幡平アスピーテライン（雪の回廊）</div>
+          <div class="tl-desc">2026年4/15開通予定。数メートルの雪の壁の間をドライブ。</div>
+          <div class="tl-tags">
+            <span class="tag tag-park-paid">🅿 見返峠P 無料（250台）</span>
+            <span class="tag tag-warn">⚠️ GWは数km渋滞</span>
+            <span class="tag tag-note">夜間通行止め〜8:30</span>
+          </div>
+        </div>
+      </div>
+      <div class="tl-item spot"><div class="tl-dot"></div>
+        <div class="tl-card" onclick="openDrawer('hakkapark')">
+          <div class="tl-time">13:30</div>
+          <div class="tl-name">🌄 十和田湖 発荷峠展望台</div>
+          <div class="tl-desc">十和田湖全景が一望できる絶景ポイント。福田パンで昼食。</div>
+          <div class="tl-tags"><span class="tag tag-park">🅿 展望台前 無料P</span><span class="tag tag-note">📍 秋田県小坂町十和田湖発荷峠</span></div>
+        </div>
+      </div>
+      <div class="tl-item spot"><div class="tl-dot"></div>
+        <div class="tl-card" onclick="openDrawer('towadapark')">
+          <div class="tl-time">14:15</div>
+          <div class="tl-name">🏞 十和田湖畔散策（子ノ口）</div>
+          <div class="tl-desc">奥入瀬渓流の入り口。静かな湖畔を軽く歩きます。</div>
+          <div class="tl-tags"><span class="tag tag-park">🅿 子ノ口 無料P</span><span class="tag tag-note">📍 十和田市奥瀬十和田湖畔子ノ口</span></div>
+        </div>
+      </div>
+      <div class="tl-item hotel"><div class="tl-dot"></div>
+        <div class="hotel-card">
+          <div class="hotel-title">🏨 ホテル十和田荘 チェックイン 15:00以降</div>
+          <div class="hotel-price">¥40,740</div>
+          <div class="hotel-note">キャンセル無料：4/28 08:00まで ¥40,740</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DAY 4 ===== -->
+<div class="day-panel" id="panel-d4">
+  <div class="day-header d4">
+    <div class="day-num">DAY 4 — 5/2（土）</div>
+    <div class="day-title">青森県内<br>奥入瀬・八甲田・青森市</div>
+    <div class="day-route">走行距離：約130km　出発 08:00</div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">📍 スケジュール＆駐車場</div>
+    <div class="timeline">
+      <div class="tl-item spot"><div class="tl-dot"></div>
+        <div class="tl-card" onclick="openDrawer('oirasepark')">
+          <div class="tl-time">08:15〜11:00</div>
+          <div class="tl-name">🌿 奥入瀬渓流（石ヶ戸〜阿修羅の流れ）</div>
+          <div class="tl-desc">石ヶ戸〜阿修羅の流れをハイライト散策（約1時間）。雲井の滝・銚子大滝は車でピンポイント鑑賞。</div>
+          <div class="tl-tags">
+            <span class="tag tag-park">🅿 石ヶ戸 無料P</span>
+            <span class="tag tag-warn">⚠️ GW朝から満車</span>
+            <span class="tag tag-note">📍 十和田市奥瀬栃久保183</span>
+          </div>
+        </div>
+      </div>
+      <div class="tl-item spot"><div class="tl-dot"></div>
+        <div class="tl-card" onclick="openDrawer('hakkodapark')">
+          <div class="tl-time">11:00〜12:30</div>
+          <div class="tl-name">🚠 八甲田ロープウェー 約1.5時間</div>
+          <div class="tl-desc">山頂（標高1,324m）から青森市街・陸奥湾・北海道まで一望。往復10分。</div>
+          <div class="tl-tags">
+            <span class="tag tag-park">🅿 山麓駅 無料P（250台）</span>
+            <span class="tag tag-note">📍 青森市荒川寒水沢1-12</span>
+          </div>
+        </div>
+      </div>
+      <div class="tl-item spot"><div class="tl-dot"></div>
+        <div class="tl-card" onclick="openDrawer('artmuseumpark')">
+          <div class="tl-time">13:30〜16:00</div>
+          <div class="tl-name">🐕 青森県立美術館（あおもり犬）約2.5時間</div>
+          <div class="tl-desc">奈良美智の巨大彫刻「あおもり犬」必見。三内丸山遺跡に隣接。</div>
+          <div class="tl-tags">
+            <span class="tag tag-park">🅿 美術館 無料P</span>
+            <span class="tag tag-note">📍 青森市合子沢山田152-6</span>
+          </div>
+        </div>
+      </div>
+      <div class="tl-item spot"><div class="tl-dot"></div>
+        <div class="tl-card" onclick="openDrawer('afactorypark')">
+          <div class="tl-time">16:00〜17:30</div>
+          <div class="tl-name">🍎 A-FACTORY ＆ 青森ベイブリッジ</div>
+          <div class="tl-desc">シードル工房・青森土産。ラ・ブリッジ遊歩道で夕暮れの陸奥湾を満喫。</div>
+          <div class="tl-tags">
+            <span class="tag tag-park-paid">🅿 A-FACTORY有料P</span>
+            <span class="tag tag-park">最寄無料：青い海公園P（柳川1-112）</span>
+          </div>
+        </div>
+      </div>
+      <div class="tl-item hotel"><div class="tl-dot"></div>
+        <div class="hotel-card">
+          <div class="hotel-title">🏨 アートホテル青森 チェックイン 18:00</div>
+          <div class="hotel-price">¥67,200（予約済み）</div>
+          <div class="hotel-note">キャンセル無料：4/30まで</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DAY 5 ===== -->
+<div class="day-panel" id="panel-d5">
+  <div class="day-header d5">
+    <div class="day-num">DAY 5 — 5/3（日）</div>
+    <div class="day-title">青森 → 秋田県<br>鶴の舞橋・高山稲荷・白神山地</div>
+    <div class="day-route">走行距離：約290km　出発 08:00</div>
+  </div>
+
+  <div class="fuel-card" style="background:linear-gradient(135deg,#fff3f3,#fce4e4);border-color:#f48fb1;">
+    <div class="fuel-header"><div class="fuel-icon">⛽</div><div><div class="fuel-title" style="color:#c62828;">🔴 出発前 必須満タン給油（3回目）</div><div class="fuel-meta" style="color:#d32f2f;">白神山地〜男鹿は約160km GS過疎地帯</div></div></div>
+    <div class="fuel-row">
+      <div class="fuel-badge must">出光系列</div>
+      <div class="fuel-body">
+        <div class="fuel-name">apollostation セルフ青葉SS</div>
+        <div class="fuel-addr-text">📍 青森県青森市青葉3-9-13</div>
+        <div class="fuel-price">国道7号 鶴田方面 順路上</div>
+        <a class="map-btn map-btn-red" href="https://maps.google.com/?q=青森県青森市青葉3-9-13" target="_blank">🗺 マップで開く</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">📍 スケジュール＆駐車場</div>
+    <div class="timeline">
+      <div class="tl-item spot"><div class="tl-dot"></div>
+        <div class="tl-card" onclick="openDrawer('tsurunopark')">
+          <div class="tl-time">09:10</div>
+          <div class="tl-name">🌉 鶴の舞橋（鶴田町）</div>
+          <div class="tl-desc">全長300mの日本一の木造三連太鼓橋。岩木山を背景に絶景。</div>
+          <div class="tl-tags">
+            <span class="tag tag-park">🅿 富士見湖パーク 無料P</span>
+            <span class="tag tag-note">📍 鶴田町廻堰大沢81-150</span>
+          </div>
+        </div>
+      </div>
+      <div class="tl-item spot"><div class="tl-dot"></div>
+        <div class="tl-card" onclick="openDrawer('takayamapark')">
+          <div class="tl-time">10:45</div>
+          <div class="tl-name">⛩ 高山稲荷神社（つがる市）</div>
+          <div class="tl-desc">朱色の千本鳥居が連なる青森のパワースポット。写真映え抜群。</div>
+          <div class="tl-tags">
+            <span class="tag tag-park">🅿 境内 無料P（大型可）</span>
+            <span class="tag tag-note">📍 つがる市牛潟町鷲野沢147-1</span>
+          </div>
+        </div>
+      </div>
+      <div class="tl-item spot"><div class="tl-dot"></div>
+        <div class="tl-card" onclick="openDrawer('aoikepark')">
+          <div class="tl-time">14:00〜15:30</div>
+          <div class="tl-name">🌊 白神山地 十二湖「青池」約1.5時間</div>
+          <div class="tl-desc">神秘のコバルトブルー。午後の光で最も美しい。青池まで徒歩30分。</div>
+          <div class="tl-tags">
+            <span class="tag tag-park-paid">🅿 森の物産館キョロロ 500円</span>
+            <span class="tag tag-note">📍 深浦町松神山国有林</span>
+          </div>
+        </div>
+      </div>
+      <div class="tl-item hotel"><div class="tl-dot"></div>
+        <div class="hotel-card">
+          <div class="hotel-title">🏨 男鹿観光ホテル チェックイン 18:00</div>
+          <div class="hotel-price">¥72,863（予約済み）</div>
+          <div class="hotel-note">キャンセル無料：4/29 23:59まで</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DAY 6 ===== -->
+<div class="day-panel" id="panel-d6">
+  <div class="day-header d6">
+    <div class="day-num">DAY 6 — 5/4（月）</div>
+    <div class="day-title">秋田 → 山形県<br>大潟村・角館・山寺・蔵王</div>
+    <div class="day-route">走行距離：約350km　出発 08:00</div>
+  </div>
+
+  <div class="fuel-card" style="background:linear-gradient(135deg,#f0fff4,#e8f5e9);border-color:#a5d6a7;">
+    <div class="fuel-header"><div class="fuel-icon">⛽</div><div><div class="fuel-title" style="color:#2e7d32;">角館周辺 補充給油（推奨）</div><div class="fuel-meta" style="color:#388e3c;">角館→山寺→蔵王 約200km超の連続走行</div></div></div>
+    <div class="fuel-row">
+      <div class="fuel-badge rec">推奨</div>
+      <div class="fuel-body">
+        <div class="fuel-name">角館周辺 GS または 秋田道横手IC付近</div>
+        <div class="fuel-addr-text">📍 秋田県仙北市角館町周辺</div>
+        <a class="map-btn map-btn-green" href="https://maps.google.com/?q=ガソリンスタンド 角館 秋田県 軽油" target="_blank">🗺 周辺GS検索</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">📍 スケジュール＆駐車場</div>
+    <div class="timeline">
+      <div class="tl-item spot"><div class="tl-dot"></div>
+        <div class="tl-card" onclick="openDrawer('nanohanapark')">
+          <div class="tl-time">08:30</div>
+          <div class="tl-name">🌸 大潟村 桜・菜の花ロード（ドライブ）</div>
+          <div class="tl-desc">県道298号線沿い約11kmにわたる桜3,700本と菜の花の競演。</div>
+          <div class="tl-tags">
+            <span class="tag tag-park">🅿 路肩スペース 無料</span>
+            <span class="tag tag-note">📍 秋田県南秋田郡大潟村 県道298号</span>
+          </div>
+        </div>
+      </div>
+      <div class="tl-item spot"><div class="tl-dot"></div>
+        <div class="tl-card" onclick="openDrawer('kakunodatepark')">
+          <div class="tl-time">10:30〜12:30</div>
+          <div class="tl-name">🏯 角館 武家屋敷通り 散策</div>
+          <div class="tl-desc">みちのくの小京都。青柳家などの武家屋敷見学。みそきりたんぽ（250円）を食べ歩き。</div>
+          <div class="tl-tags">
+            <span class="tag tag-park-paid">🅿 市営桜並木P 8:30〜16:30は500円</span>
+            <span class="tag tag-park">時間外無料 📍 仙北市角館町北野124-2</span>
+          </div>
+        </div>
+      </div>
+      <div class="tl-item spot"><div class="tl-dot"></div>
+        <div class="tl-card" onclick="openDrawer('yamaderapark')">
+          <div class="tl-time">15:30〜17:00</div>
+          <div class="tl-name">⛩ 宝珠山 立石寺（山寺）参拝</div>
+          <div class="tl-desc">約1,015段の石段を登り奥の院へ。五大堂からのパノラマが絶景。参拝所要1.5時間。</div>
+          <div class="tl-tags">
+            <span class="tag tag-park-paid">🅿 周辺P 300〜500円</span>
+            <span class="tag tag-note">入山料300円 📍 山形市山寺4753付近</span>
+          </div>
+        </div>
+      </div>
+      <div class="tl-item hotel"><div class="tl-dot"></div>
+        <div class="hotel-card">
+          <div class="hotel-title">🏨 蔵王温泉 チェックイン 17:00</div>
+          <div class="hotel-price">¥36,506（予約済み）</div>
+          <div class="hotel-note">蔵王温泉字三度川219-1 キャンセル無料：4/28 23:59まで</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DAY 7 ===== -->
+<div class="day-panel" id="panel-d7">
+  <div class="day-header d7">
+    <div class="day-num">DAY 7 — 5/5（火）帰路</div>
+    <div class="day-title">山形 → 白川湖 → 東京</div>
+    <div class="day-route">走行距離：約450km　出発 08:00</div>
+  </div>
+
+  <div class="fuel-card" style="background:linear-gradient(135deg,#fff3f3,#fce4e4);border-color:#f48fb1;">
+    <div class="fuel-header"><div class="fuel-icon">⛽</div><div><div class="fuel-title" style="color:#c62828;">🔴 出発前 必須満タン給油（4回目）</div><div class="fuel-meta" style="color:#d32f2f;">GW最終日・東北道30〜50km渋滞を想定</div></div></div>
+    <div class="fuel-row">
+      <div class="fuel-badge must">出光系列・05:00〜</div>
+      <div class="fuel-body">
+        <div class="fuel-name">apollostation セルフ寿町SS（出光リテール直営）</div>
+        <div class="fuel-addr-text">📍 山形県山形市寿町13-8</div>
+        <div class="fuel-price">軽油 151円/L（現金・3/5確認値）｜05:00〜28:00</div>
+        <a class="map-btn map-btn-red" href="https://maps.google.com/?q=山形県山形市寿町13-8" target="_blank">🗺 マップで開く</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">📍 スケジュール＆駐車場</div>
+    <div class="timeline">
+      <div class="tl-item spot"><div class="tl-dot"></div>
+        <div class="tl-card" onclick="openDrawer('zaoupark')">
+          <div class="tl-time">08:00〜11:00</div>
+          <div class="tl-name">🌿 蔵王自然植物園 ＋ いろは沼</div>
+          <div class="tl-desc">自然植物園一周コース（徒歩0.4km/30分）＋いろは沼コース（徒歩1km/60分）。</div>
+          <div class="tl-tags">
+            <span class="tag tag-park">🅿 山頂レストハウス 無料P（200台）</span>
+            <span class="tag tag-note">📍 上山市蔵王山頂</span>
+          </div>
+        </div>
+      </div>
+      <div class="tl-item spot"><div class="tl-dot"></div>
+        <div class="tl-card" onclick="openDrawer('shirakawako')">
+          <div class="tl-time">12:30〜14:00</div>
+          <div class="tl-name">🌲 白川湖 水没林（飯豊町）</div>
+          <div class="tl-desc">春限定の幻想的な景観。シロヤナギが水面から生えているように見える絶景。5月中旬まで。</div>
+          <div class="tl-tags">
+            <span class="tag tag-park-paid">🅿 湖岸公園P GW期間500円目安</span>
+            <span class="tag tag-park">5/2〜5 無料シャトルバスあり（9〜16時）</span>
+            <span class="tag tag-note">📍 西置賜郡飯豊町数馬</span>
+          </div>
+        </div>
+      </div>
+      <div class="tl-item move"><div class="tl-dot"></div>
+        <div class="tl-card">
+          <div class="tl-time">14:00〜</div>
+          <div class="tl-name">🚗 東北道経由 東京へ</div>
+          <div class="tl-desc">GW最終日・上り線は30〜50kmの大渋滞が予想されます。余裕を持って出発してください。</div>
+          <div class="tl-tags"><span class="tag tag-warn">⚠️ 20:00着は楽観的。21〜22時想定で</span></div>
+        </div>
+      </div>
+      <div class="tl-item hotel"><div class="tl-dot"></div>
+        <div class="tl-card" style="background:linear-gradient(135deg,#f0f8ff,#e8f4fd);border-color:#90caf9;">
+          <div class="tl-time">20:00〜</div>
+          <div class="tl-name">🏠 東京到着 — 東北6県の旅 完了！</div>
+          <div class="tl-desc">お疲れ様でした。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<!-- DRAWER -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer(event)">
+  <div class="drawer" id="drawer" style="position:relative;">
+    <div class="drawer-handle"></div>
+    <button class="close-btn" onclick="closeDrawerBtn()">✕</button>
+    <div class="drawer-body" id="drawerBody"></div>
+  </div>
+</div>
+
+<script>
+// ===== TAB NAVIGATION =====
+document.getElementById('navTabs').addEventListener('click', e => {
+  const btn = e.target.closest('.tab-btn');
+  if (!btn) return;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.day-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('panel-' + btn.dataset.day).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+// ===== SCROLL TOP =====
+window.addEventListener('scroll', () => {
+  document.getElementById('backTop').classList.toggle('visible', window.scrollY > 200);
+});
+
+// ===== DRAWER DATA =====
+const drawerData = {
+  ouchipark: {
+    title: '大内宿 無料駐車場',
+    sub: '1日目 4/29 | 福島県南会津郡下郷町',
+    sections: [
+      {title:'住所', body:'福島県南会津郡下郷町大内（食の館そば道場を目標に）'},
+      {title:'料金・特徴', body:'無料｜未舗装｜係員なし｜大内宿まで徒歩約5分\n有料P（500円）が満車の際の穴場。展望台も近い。'},
+      {title:'GW注意', body:'9時頃から満車になりやすい。8:30前の到着を強く推奨。'},
+    ],
+    map:'福島県南会津郡下郷町大内 大内宿食の館'
+  },
+  tsurupark: {
+    title: '飯盛山 市営観光客用無料駐車場',
+    sub: '1日目 4/29 | 鶴ヶ城・さざえ堂共用',
+    sections: [
+      {title:'住所', body:'福島県会津若松市一箕町大字八幡字牛ヶ墓244-5'},
+      {title:'料金・特徴', body:'無料｜利用時間 8:30〜17:15\n鶴ヶ城まで約1km（バス or 徒歩）。鶴ヶ城公式P（200台）は有料（最初の1時間200円）。'},
+    ],
+    map:'福島県会津若松市一箕町大字八幡244-5 飯盛山市営無料駐車場'
+  },
+  sazaepark: {
+    title: '飯盛山 市営観光客用無料駐車場（さざえ堂共用）',
+    sub: '1日目 4/29 | さざえ堂・飯盛山',
+    sections: [
+      {title:'住所', body:'福島県会津若松市一箕町大字八幡字牛ヶ墓244-5'},
+      {title:'料金・特徴', body:'無料｜さざえ堂まで徒歩6分\n鶴ヶ城との連続観光に便利。さざえ堂入場料300円は別途必要。'},
+    ],
+    map:'福島県会津若松市一箕町大字八幡244-5'
+  },
+  goshikipark: {
+    title: '裏磐梯ビジターセンター 無料駐車場',
+    sub: '1日目 4/29 | 五色沼（裏磐梯）',
+    sections: [
+      {title:'住所', body:'福島県耶麻郡北塩原村桧原湯平山1171-1'},
+      {title:'料金・特徴', body:'無料｜24時間｜80台\n五色沼自然探勝路の東側入口に隣接。毘沙門沼まで目の前。'},
+      {title:'満車時の代替', body:'裏磐梯観光協会P（隣・100台）または裏磐梯物産館向かいP（西側）を利用。'},
+    ],
+    map:'福島県耶麻郡北塩原村桧原湯平山1171-1 裏磐梯ビジターセンター'
+  },
+  genbikeipark: {
+    title: '厳美渓 市営無料駐車場',
+    sub: '2日目 4/30 | 岩手県一関市厳美町',
+    sections: [
+      {title:'住所', body:'岩手県一関市厳美町（天工橋北岸・国道342号沿い）'},
+      {title:'料金・特徴', body:'無料｜厳美渓まで徒歩5〜10分\n道の駅厳美渓Pは休日昼間は満車が多く不向き。天工橋を渡らず北岸側に進んだ先にある穴場Pが狙い目。'},
+    ],
+    map:'岩手県一関市厳美町 厳美渓市営駐車場'
+  },
+  takkokupark: {
+    title: '達谷窟毘沙門堂 無料駐車場',
+    sub: '2日目 4/30 | 岩手県平泉町',
+    sections: [
+      {title:'住所', body:'岩手県西磐井郡平泉町平泉字北澤16（道路向かい）'},
+      {title:'料金・特徴', body:'無料｜目の前\n国道4号線沿い。毘沙門堂正面の道路向かいに広い無料駐車場あり。\n入場料500円は別途必要。'},
+    ],
+    map:'岩手県西磐井郡平泉町平泉北澤 達谷窟毘沙門堂'
+  },
+  motujipark: {
+    title: '毛越寺 町営駐車場',
+    sub: '2日目 4/30 | 岩手県平泉町',
+    sections: [
+      {title:'住所', body:'岩手県西磐井郡平泉町平泉字花立地内（毛越寺隣接）'},
+      {title:'料金・特徴', body:'有料｜普通車300円、大型バス750円\n毛越寺まで徒歩2分・330台収容。無料P無し。\n中尊寺P駐車時に毛越寺100円割引券がもらえる。'},
+    ],
+    map:'岩手県西磐井郡平泉町平泉 毛越寺駐車場'
+  },
+  chusonjipark: {
+    title: '中尊寺 第1・第2町営駐車場',
+    sub: '2日目 4/30 | 岩手県平泉町',
+    sections: [
+      {title:'住所', body:'岩手県西磐井郡平泉町平泉衣関202（第1駐車場）'},
+      {title:'料金・特徴', body:'有料｜普通車500円\n月見坂（表参道）すぐ前。毛越寺100円割引券付き。\n無料P：道の駅平泉（徒歩15分）が代替案。'},
+      {title:'⚠️ 重要：閉館時間', body:'参拝・拝観券は16:50が締切（17:00閉館）。15:10到着で金色堂まで余裕をもって行動してください。'},
+    ],
+    map:'岩手県西磐井郡平泉町平泉衣関202 中尊寺第1駐車場'
+  },
+  hachimantaipark: {
+    title: '八幡平山頂 見返峠駐車場',
+    sub: '3日目 5/1 | 岩手県八幡平市',
+    sections: [
+      {title:'住所', body:'岩手県八幡平市松尾寄木（八幡平山頂・国道341号）'},
+      {title:'料金・特徴', body:'無料｜250台\n雪の回廊ドライブの終点。ドラゴンアイ（鏡沼）まで徒歩約20分。'},
+      {title:'⚠️ GW渋滞', body:'夜間通行止め解除（8:30〜）のため朝はゲート開門待ちの大行列。GW中は数km・数時間待ちも。午後遅め（15時以降）の方が空いている傾向。'},
+    ],
+    map:'岩手県八幡平市松尾寄木 八幡平山頂見返峠駐車場'
+  },
+  hakkapark: {
+    title: '発荷峠展望台 無料駐車場',
+    sub: '3日目 5/1 | 秋田県小坂町',
+    sections: [
+      {title:'住所', body:'秋田県鹿角郡小坂町十和田湖字発荷峠'},
+      {title:'料金・特徴', body:'無料｜展望台に隣接\n十和田湖の全景を一望できる展望台直前の無料P。'},
+    ],
+    map:'秋田県鹿角郡小坂町十和田湖発荷峠 展望台'
+  },
+  towadapark: {
+    title: '子ノ口 無料駐車場',
+    sub: '3日目 5/1 | 十和田湖・奥入瀬渓流入口',
+    sections: [
+      {title:'住所', body:'青森県十和田市奥瀬字十和田湖畔（子ノ口）'},
+      {title:'料金・特徴', body:'無料\n奥入瀬渓流の入口・十和田湖畔。トイレ・自販機あり。\n十和田神社・乙女の像のある休屋側は有料P（500円）。'},
+    ],
+    map:'青森県十和田市奥瀬十和田湖畔子ノ口'
+  },
+  oirasepark: {
+    title: '石ヶ戸 無料駐車場',
+    sub: '4日目 5/2 | 奥入瀬渓流（中間点）',
+    sections: [
+      {title:'住所', body:'青森県十和田市奥瀬字栃久保183（石ヶ戸休憩所隣）'},
+      {title:'料金・特徴', body:'無料｜奥入瀬渓流のハイライト散策の起点\n売店・軽食あり。トイレ24時間。'},
+      {title:'⚠️ GW注意', body:'GWは朝から満車。満車時は焼山駐車場（無料・広い）に駐車し路線バスで移動。'},
+    ],
+    map:'青森県十和田市奥瀬栃久保183 石ヶ戸休憩所'
+  },
+  hakkodapark: {
+    title: '八甲田ロープウェー 山麓駅駐車場',
+    sub: '4日目 5/2 | 青森県青森市',
+    sections: [
+      {title:'住所', body:'青森県青森市荒川字寒水沢1-12（山麓駅）'},
+      {title:'料金・特徴', body:'無料｜250台｜山麓駅に隣接\n営業時間：9:00〜16:20（11月中旬〜2月は15:40）'},
+    ],
+    map:'青森県青森市荒川寒水沢1-12 八甲田ロープウェー山麓駅'
+  },
+  artmuseumpark: {
+    title: '青森県立美術館 無料駐車場',
+    sub: '4日目 5/2 | 青森県青森市',
+    sections: [
+      {title:'住所', body:'青森県青森市大字合子沢字山田152-6'},
+      {title:'料金・特徴', body:'無料｜美術館正面\n三内丸山遺跡と隣接。「あおもり犬」（奈良美智）は必見。'},
+    ],
+    map:'青森県青森市合子沢山田152-6 青森県立美術館'
+  },
+  afactorypark: {
+    title: 'A-FACTORY 周辺駐車場',
+    sub: '4日目 5/2 | 青森市ベイエリア',
+    sections: [
+      {title:'無料の選択肢', body:'青い海公園駐車場（青森市柳川1-112）\nA-FACTORYまで徒歩約5分。無料で使える最寄りP。'},
+      {title:'A-FACTORY隣接P', body:'30分無料、以降200円/30分の有料P。短時間なら便利。'},
+    ],
+    map:'青森県青森市柳川1-112 青い海公園駐車場'
+  },
+  tsurunopark: {
+    title: '富士見湖パーク 無料駐車場',
+    sub: '5日目 5/3 | 鶴の舞橋（青森県鶴田町）',
+    sections: [
+      {title:'住所', body:'青森県北津軽郡鶴田町廻堰大沢81-150（富士見湖パーク内）'},
+      {title:'料金・特徴', body:'無料｜大型バス可\n鶴の舞橋・丹頂鶴自然公園に隣接。'},
+    ],
+    map:'青森県北津軽郡鶴田町廻堰大沢81-150 富士見湖パーク'
+  },
+  takayamapark: {
+    title: '高山稲荷神社 無料駐車場',
+    sub: '5日目 5/3 | 青森県つがる市',
+    sections: [
+      {title:'住所', body:'青森県つがる市牛潟町鷲野沢147-1'},
+      {title:'料金・特徴', body:'無料｜大型バス可｜社務所前\n境内への駐車場から鳥居まで徒歩1分。'},
+    ],
+    map:'青森県つがる市牛潟町鷲野沢147-1 高山稲荷神社'
+  },
+  aoikepark: {
+    title: '森の物産館キョロロ 駐車場',
+    sub: '5日目 5/3 | 白神山地 十二湖 青池',
+    sections: [
+      {title:'住所', body:'青森県西津軽郡深浦町松神山国有林内'},
+      {title:'料金・特徴', body:'有料｜普通車500円（物産館レジで支払）\n青池まで徒歩約30分。事実上唯一の青池アクセスP。'},
+      {title:'注意', body:'森の物産館のPから先は駐車禁止区間。ここに駐めて歩くのが基本。青池は午後の光でより濃いコバルトブルーに。'},
+    ],
+    map:'青森県西津軽郡深浦町松神山 森の物産館キョロロ'
+  },
+  nanohanapark: {
+    title: '大潟村 菜の花ロード',
+    sub: '6日目 5/4 | 秋田県大潟村',
+    sections: [
+      {title:'エリア', body:'秋田県南秋田郡大潟村 県道298号線沿い'},
+      {title:'駐車', body:'車窓からのドライブ鑑賞がメイン。路肩の無料スペースが点在。約11kmにわたる桜＋菜の花の絶景。'},
+    ],
+    map:'秋田県南秋田郡大潟村 県道298号 菜の花ロード'
+  },
+  kakunodatepark: {
+    title: '仙北市営桜並木駐車場',
+    sub: '6日目 5/4 | 角館武家屋敷',
+    sections: [
+      {title:'住所', body:'秋田県仙北市角館町北野124-2'},
+      {title:'料金・特徴', body:'8:30〜16:30：普通車500円\n時間外（〜8:30、16:30〜）：無料開放\n武家屋敷通りまで徒歩3分。桧木内川沿い。'},
+      {title:'GW注意', body:'5/1〜5/5の17:00〜24:00は無料。5/4当日の早朝到着か17:00以降なら無料で利用可能。'},
+    ],
+    map:'秋田県仙北市角館町北野124-2 市営桜並木駐車場'
+  },
+  yamaderapark: {
+    title: '立石寺（山寺）周辺駐車場',
+    sub: '6日目 5/4 | 山形市山寺',
+    sections: [
+      {title:'エリア', body:'山形県山形市山寺4753付近（山寺駅周辺）'},
+      {title:'料金・特徴', body:'有料（300〜500円）がほとんど\n一部の土産物店は購入条件付きで無料あり。入山料300円。\n石段往復の所要時間：約1.5時間。'},
+      {title:'注意', body:'GW中は混雑が予想されます。早めの到着を推奨。'},
+    ],
+    map:'山形県山形市山寺4753 立石寺登山口'
+  },
+  zaoupark: {
+    title: '蔵王山頂 無料駐車場',
+    sub: '7日目 5/5 | 蔵王自然植物園・いろは沼',
+    sections: [
+      {title:'住所', body:'山形県上山市蔵王山頂（蔵王エコーライン沿い）'},
+      {title:'料金・特徴', body:'無料｜200台程度\n蔵王自然植物園・いろは沼への散策起点。'},
+    ],
+    map:'山形県上山市蔵王山頂 蔵王山頂駐車場'
+  },
+  shirakawako: {
+    title: '白川湖岸公園 駐車場',
+    sub: '7日目 5/5 | 山形県飯豊町 白川湖水没林',
+    sections: [
+      {title:'住所', body:'山形県西置賜郡飯豊町数馬（白川湖岸公園）'},
+      {title:'料金・特徴', body:'GW期間（4/18〜5/17）は駐車協力金あり（目安500円）\n5/2〜5/5の9:00〜16:00は源流の森センターからの無料シャトルバス（20分間隔）も運行。'},
+      {title:'注意', body:'GW中は最大3.5kmの渋滞が発生することがある。シャトルバス活用推奨。'},
+    ],
+    map:'山形県西置賜郡飯豊町数馬 白川湖岸公園'
+  },
+};
+
+function openDrawer(id) {
+  const d = drawerData[id];
+  if (!d) return;
+  let html = `<div class="drawer-title">${d.title}</div><div class="drawer-sub">${d.sub}</div>`;
+  d.sections.forEach(s => {
+    html += `<div class="drawer-section"><div class="drawer-section-title">${s.title}</div><div class="drawer-text">${s.body.replace(/\n/g,'<br>')}</div></div>`;
+  });
+  html += `<a class="map-btn" href="https://maps.google.com/?q=${encodeURIComponent(d.map)}" target="_blank" style="margin-top:4px;">🗺 Google マップで開く</a>`;
+  document.getElementById('drawerBody').innerHTML = html;
+  const ov = document.getElementById('drawerOverlay');
+  ov.classList.add('open');
+  setTimeout(() => ov.querySelector('.drawer').style.transform = 'translateY(0)', 10);
+}
+
+function closeDrawer(e) {
+  if (e.target === document.getElementById('drawerOverlay')) closeDrawerBtn();
+}
+function closeDrawerBtn() {
+  document.getElementById('drawerOverlay').classList.remove('open');
+}
+</script>
+</body>
+</html>
