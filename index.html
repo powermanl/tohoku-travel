@@ -235,6 +235,26 @@ body{
 }
 .ft-text{font-size:11px;opacity:.9;}
 
+/* ===== WEATHER BANNER ===== */
+.weather-banner{
+  background:linear-gradient(135deg,rgba(30,80,160,.08),rgba(30,80,160,.04));
+  border:1px solid rgba(30,80,160,.18);
+  border-radius:10px;padding:10px 14px;margin-bottom:14px;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;
+}
+.wx-icon{font-size:26px;line-height:1;}
+.wx-main{display:flex;align-items:center;gap:10px;}
+.wx-text{flex:1;}
+.wx-title{font-size:12px;font-weight:700;color:var(--blue);}
+.wx-desc{font-size:11px;color:var(--ink2);margin-top:2px;line-height:1.5;}
+.wx-meta{display:flex;gap:8px;flex-wrap:wrap;}
+.wx-badge{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:600;}
+.wx-temp{background:#e3f2fd;color:#0d47a1;}
+.wx-rain{background:#fce4ec;color:#b71c1c;}
+.wx-rain-ok{background:#e8f4ee;color:#1d6a3a;}
+.wx-note{font-size:10px;color:var(--ink3);margin-top:4px;line-height:1.5;}
+.wx-source{font-size:9px;color:var(--ink3);margin-top:2px;opacity:.7;}
+
 /* ===== SCROLL TOP ===== */
 .back-top{
   position:fixed;bottom:20px;right:16px;
@@ -316,6 +336,65 @@ body{
   </div>
 
   <div class="summary-grid">
+    <!-- 天気サマリーカード -->
+    <div class="sum-card" style="background:linear-gradient(135deg,#e8f4fd,#f0f8ff);border-color:#90caf9;">
+      <div class="sum-day" style="color:#0d47a1;">🌤 GW天気予報サマリー（tenki.jp 4/23発表）</div>
+      <div class="sum-route" style="font-size:12px;margin-bottom:8px;">信頼度は後半ほど低くなります。出発前に最新予報を確認してください。</div>
+      <table style="width:100%;border-collapse:collapse;font-size:11px;">
+        <tr style="background:rgba(13,71,161,.08);">
+          <th style="padding:4px 6px;text-align:left;border-bottom:1px solid #bee3f8;color:#0d47a1;">日付</th>
+          <th style="padding:4px 6px;text-align:center;border-bottom:1px solid #bee3f8;color:#0d47a1;">天気</th>
+          <th style="padding:4px 6px;text-align:center;border-bottom:1px solid #bee3f8;color:#0d47a1;">気温</th>
+          <th style="padding:4px 6px;text-align:center;border-bottom:1px solid #bee3f8;color:#0d47a1;">降水</th>
+        </tr>
+        <tr style="border-bottom:1px solid #e3f2fd;">
+          <td style="padding:5px 6px;color:#555;"><b>4/29 Day1</b><br><span style="color:#888;">福島</span></td>
+          <td style="padding:5px 6px;text-align:center;">🌧 雨のち曇</td>
+          <td style="padding:5px 6px;text-align:center;color:#0d47a1;">18 / 8℃</td>
+          <td style="padding:5px 6px;text-align:center;"><span style="color:#b71c1c;font-weight:700;">60%</span></td>
+        </tr>
+        <tr style="border-bottom:1px solid #e3f2fd;background:rgba(255,255,255,.5);">
+          <td style="padding:5px 6px;color:#555;"><b>4/30 Day2</b><br><span style="color:#888;">岩手</span></td>
+          <td style="padding:5px 6px;text-align:center;">☀️ 晴れ</td>
+          <td style="padding:5px 6px;text-align:center;color:#0d47a1;">19 / 8℃</td>
+          <td style="padding:5px 6px;text-align:center;"><span style="color:#1d6a3a;font-weight:700;">20%</span></td>
+        </tr>
+        <tr style="border-bottom:1px solid #e3f2fd;">
+          <td style="padding:5px 6px;color:#555;"><b>5/1 Day3</b><br><span style="color:#888;">岩手→青森</span></td>
+          <td style="padding:5px 6px;text-align:center;">🌤 晴れ</td>
+          <td style="padding:5px 6px;text-align:center;color:#0d47a1;">17 / 7℃</td>
+          <td style="padding:5px 6px;text-align:center;"><span style="color:#1d6a3a;font-weight:700;">20%</span></td>
+        </tr>
+        <tr style="border-bottom:1px solid #e3f2fd;background:rgba(255,255,255,.5);">
+          <td style="padding:5px 6px;color:#555;"><b>5/2 Day4</b><br><span style="color:#888;">青森</span></td>
+          <td style="padding:5px 6px;text-align:center;">☀️ 晴れ</td>
+          <td style="padding:5px 6px;text-align:center;color:#0d47a1;">18 / 9℃</td>
+          <td style="padding:5px 6px;text-align:center;"><span style="color:#1d6a3a;font-weight:700;">20%</span></td>
+        </tr>
+        <tr style="border-bottom:1px solid #e3f2fd;">
+          <td style="padding:5px 6px;color:#555;"><b>5/3 Day5</b><br><span style="color:#888;">青森→秋田</span></td>
+          <td style="padding:5px 6px;text-align:center;">🌧 曇のち雨</td>
+          <td style="padding:5px 6px;text-align:center;color:#0d47a1;">17 / 9℃</td>
+          <td style="padding:5px 6px;text-align:center;"><span style="color:#b71c1c;font-weight:700;">60%</span></td>
+        </tr>
+        <tr style="border-bottom:1px solid #e3f2fd;background:rgba(255,255,255,.5);">
+          <td style="padding:5px 6px;color:#555;"><b>5/4 Day6</b><br><span style="color:#888;">秋田→山形</span></td>
+          <td style="padding:5px 6px;text-align:center;">🌧 雨</td>
+          <td style="padding:5px 6px;text-align:center;color:#0d47a1;">16 / 8℃</td>
+          <td style="padding:5px 6px;text-align:center;"><span style="color:#b71c1c;font-weight:700;">70%</span></td>
+        </tr>
+        <tr>
+          <td style="padding:5px 6px;color:#555;"><b>5/5 Day7</b><br><span style="color:#888;">山形</span></td>
+          <td style="padding:5px 6px;text-align:center;">🌤 晴れ時々曇</td>
+          <td style="padding:5px 6px;text-align:center;color:#0d47a1;">18 / 7℃</td>
+          <td style="padding:5px 6px;text-align:center;"><span style="color:#e65100;font-weight:700;">40%</span></td>
+        </tr>
+      </table>
+      <div style="font-size:10px;color:#666;margin-top:8px;padding-top:6px;border-top:1px solid #bee3f8;">
+        ⚠️ 5/3・5/4は雨の確率が高め。レインウェア・折りたたみ傘を必携に。後半ほど予報精度が低くなるため、出発直前に最新予報を確認してください。
+      </div>
+    </div>
+
     <div class="sum-card">
       <div class="sum-day">DAY 1 — 4/29（火）</div>
       <div class="sum-route">東京 → 福島県（大内宿・会津若松・裏磐梯）</div>
@@ -392,6 +471,23 @@ body{
     <div class="day-num">DAY 1 — 4/29（火）GW初日</div>
     <div class="day-title">東京 → 福島県<br>大内宿・会津若松・裏磐梯</div>
     <div class="day-route">走行距離：約370km</div>
+  </div>
+
+  <!-- 天気予報バナー Day1 -->
+  <div class="weather-banner">
+    <div class="wx-main">
+      <div class="wx-icon">🌧</div>
+      <div class="wx-text">
+        <div class="wx-title">🌤 4/29（火）福島県エリアの天気</div>
+        <div class="wx-desc">前線の影響で<b>雨のち曇り</b>。午前中は雨の可能性あり。大内宿・会津若松・裏磐梯エリア共通。</div>
+        <div class="wx-note">⚠️ 大内宿散策・五色沼ハイキングは雨具（レインコート）必携。濡れた石畳は滑りやすいので注意。</div>
+        <div class="wx-source">出典：tenki.jp 2026/04/23発表</div>
+      </div>
+    </div>
+    <div class="wx-meta">
+      <span class="wx-badge wx-temp">🌡 最高18℃ 最低8℃</span>
+      <span class="wx-badge wx-rain">☔ 降水確率60%</span>
+    </div>
   </div>
 
   <div class="fuel-card">
@@ -490,6 +586,23 @@ body{
     <div class="day-route">走行距離：約340km　出発 07:30</div>
   </div>
 
+  <!-- 天気予報バナー Day2 -->
+  <div class="weather-banner">
+    <div class="wx-main">
+      <div class="wx-icon">☀️</div>
+      <div class="wx-text">
+        <div class="wx-title">☀️ 4/30（木）岩手県エリアの天気</div>
+        <div class="wx-desc">高気圧の通過で<b>晴れ</b>。厳美渓・平泉エリアは絶好の観光日和。</div>
+        <div class="wx-note">💡 厳美渓の川面反射や中尊寺金色堂も晴天でより映えます。紫外線対策も忘れずに。</div>
+        <div class="wx-source">出典：tenki.jp 2026/04/23発表</div>
+      </div>
+    </div>
+    <div class="wx-meta">
+      <span class="wx-badge wx-temp">🌡 最高19℃ 最低8℃</span>
+      <span class="wx-badge wx-rain-ok">☀️ 降水確率20%</span>
+    </div>
+  </div>
+
   <div class="fuel-card" style="background:linear-gradient(135deg,#f0fff4,#e8f5e9);border-color:#a5d6a7;">
     <div class="fuel-header"><div class="fuel-icon">⛽</div><div><div class="fuel-title" style="color:#2e7d32;">前沢SA 補充給油（任意）</div><div class="fuel-meta" style="color:#388e3c;">東北道下り・翌日山岳路に備えて</div></div></div>
     <div class="fuel-row">
@@ -572,6 +685,23 @@ body{
     <div class="day-route">走行距離：約310km　出発 08:00</div>
   </div>
 
+  <!-- 天気予報バナー Day3 -->
+  <div class="weather-banner">
+    <div class="wx-main">
+      <div class="wx-icon">🌤</div>
+      <div class="wx-text">
+        <div class="wx-title">🌤 5/1（金）岩手→青森エリアの天気</div>
+        <div class="wx-desc"><b>晴れ</b>。八幡平アスピーテライン・十和田湖とも好天見込み。ただし山岳部は気温低め。</div>
+        <div class="wx-note">🏔 八幡平山頂は平地より10℃以上寒い場合あり（0〜5℃も）。防寒着必須。防風・防水ジャケットを準備してください。</div>
+        <div class="wx-source">出典：tenki.jp 2026/04/23発表</div>
+      </div>
+    </div>
+    <div class="wx-meta">
+      <span class="wx-badge wx-temp">🌡 最高17℃ 最低7℃（平地）</span>
+      <span class="wx-badge wx-rain-ok">☀️ 降水確率20%</span>
+    </div>
+  </div>
+
   <div class="fuel-card" style="background:linear-gradient(135deg,#fff3f3,#fce4e4);border-color:#f48fb1;">
     <div class="fuel-header"><div class="fuel-icon">⛽</div><div><div class="fuel-title" style="color:#c62828;">🔴 出発前 必須満タン給油（2回目）</div><div class="fuel-meta" style="color:#d32f2f;">花巻〜蔦温泉まで約310km GSなし！</div></div></div>
     <div class="fuel-row">
@@ -647,6 +777,23 @@ body{
     <div class="day-route">走行距離：約130km　出発 08:00</div>
   </div>
 
+  <!-- 天気予報バナー Day4 -->
+  <div class="weather-banner">
+    <div class="wx-main">
+      <div class="wx-icon">☀️</div>
+      <div class="wx-text">
+        <div class="wx-title">☀️ 5/2（土）青森県エリアの天気</div>
+        <div class="wx-desc"><b>おおむね晴れ</b>。奥入瀬渓流・八甲田・青森市内ともに好天。観光日和。</div>
+        <div class="wx-note">💡 奥入瀬渓流は晴天時に新緑が最も美しく映えます。石ヶ戸駐車場は早朝から混雑するため、8時前の到着推奨。</div>
+        <div class="wx-source">出典：tenki.jp 2026/04/23発表</div>
+      </div>
+    </div>
+    <div class="wx-meta">
+      <span class="wx-badge wx-temp">🌡 最高18℃ 最低9℃</span>
+      <span class="wx-badge wx-rain-ok">☀️ 降水確率20%</span>
+    </div>
+  </div>
+
   <div class="section">
     <div class="section-label">📍 スケジュール＆駐車場</div>
     <div class="timeline">
@@ -712,6 +859,23 @@ body{
     <div class="day-num">DAY 5 — 5/3（日）</div>
     <div class="day-title">青森 → 秋田県<br>鶴の舞橋・高山稲荷・白神山地</div>
     <div class="day-route">走行距離：約290km　出発 08:00</div>
+  </div>
+
+  <!-- 天気予報バナー Day5 -->
+  <div class="weather-banner" style="border-color:rgba(183,28,28,.25);background:linear-gradient(135deg,rgba(183,28,28,.06),rgba(183,28,28,.02));">
+    <div class="wx-main">
+      <div class="wx-icon">🌧</div>
+      <div class="wx-text">
+        <div class="wx-title">🌧 5/3（日）青森→秋田エリアの天気</div>
+        <div class="wx-desc">低気圧接近で<b>曇りのち雨</b>。鶴の舞橋・高山稲荷は午前の早い時間帯が比較的良好。青池は霧雨の可能性あり。</div>
+        <div class="wx-note">⚠️ 白神山地の林道は雨で滑りやすくなります。レインコート・防水シューズ推奨。早めの行動を心がけてください。</div>
+        <div class="wx-source">出典：tenki.jp 2026/04/23発表（信頼度C〜D）</div>
+      </div>
+    </div>
+    <div class="wx-meta">
+      <span class="wx-badge wx-temp">🌡 最高17℃ 最低9℃</span>
+      <span class="wx-badge wx-rain">☔ 降水確率60%</span>
+    </div>
   </div>
 
   <div class="fuel-card" style="background:linear-gradient(135deg,#fff3f3,#fce4e4);border-color:#f48fb1;">
@@ -782,6 +946,23 @@ body{
     <div class="day-route">走行距離：約350km　出発 08:00</div>
   </div>
 
+  <!-- 天気予報バナー Day6 -->
+  <div class="weather-banner" style="border-color:rgba(183,28,28,.25);background:linear-gradient(135deg,rgba(183,28,28,.06),rgba(183,28,28,.02));">
+    <div class="wx-main">
+      <div class="wx-icon">🌧</div>
+      <div class="wx-text">
+        <div class="wx-title">🌧 5/4（月）秋田→山形エリアの天気</div>
+        <div class="wx-desc">低気圧の影響で<b>本州広く雨</b>。角館武家屋敷・山寺（立石寺）ともに雨の中の観光となる可能性大。</div>
+        <div class="wx-note">⚠️ 山寺の石段1,015段は雨で滑りやすく危険。必ずレインウェア着用・スニーカーで注意して歩いてください。菜の花ロードは車窓ドライブで対応可。</div>
+        <div class="wx-source">出典：tenki.jp 2026/04/23発表（信頼度C〜D）</div>
+      </div>
+    </div>
+    <div class="wx-meta">
+      <span class="wx-badge wx-temp">🌡 最高16℃ 最低8℃</span>
+      <span class="wx-badge wx-rain">☔ 降水確率70%</span>
+    </div>
+  </div>
+
   <div class="fuel-card" style="background:linear-gradient(135deg,#f0fff4,#e8f5e9);border-color:#a5d6a7;">
     <div class="fuel-header"><div class="fuel-icon">⛽</div><div><div class="fuel-title" style="color:#2e7d32;">角館周辺 補充給油（推奨）</div><div class="fuel-meta" style="color:#388e3c;">角館→山寺→蔵王 約200km超の連続走行</div></div></div>
     <div class="fuel-row">
@@ -847,6 +1028,23 @@ body{
     <div class="day-num">DAY 7 — 5/5（火）帰路</div>
     <div class="day-title">山形 → 白川湖 → 東京</div>
     <div class="day-route">走行距離：約450km　出発 08:00</div>
+  </div>
+
+  <!-- 天気予報バナー Day7 -->
+  <div class="weather-banner">
+    <div class="wx-main">
+      <div class="wx-icon">🌤</div>
+      <div class="wx-text">
+        <div class="wx-title">🌤 5/5（火）山形県エリアの天気</div>
+        <div class="wx-desc"><b>晴れ時々くもり</b>、所々でにわか雨の可能性あり。蔵王・白川湖ともに概ね良好な見込み。</div>
+        <div class="wx-note">💡 折りたたみ傘を持参すると安心。帰路・東北道は上りのGW渋滞（30〜50km予想）に要注意。早めの出発を。</div>
+        <div class="wx-source">出典：tenki.jp 2026/04/23発表（信頼度D〜E）</div>
+      </div>
+    </div>
+    <div class="wx-meta">
+      <span class="wx-badge wx-temp">🌡 最高18℃ 最低7℃</span>
+      <span class="wx-badge wx-rain">🌂 降水確率40%（にわか雨注意）</span>
+    </div>
   </div>
 
   <div class="fuel-card" style="background:linear-gradient(135deg,#fff3f3,#fce4e4);border-color:#f48fb1;">
